@@ -46,7 +46,6 @@ const noteful = (function () {
 				store.currentNote = detailsResponse;
 				render();
 			});
-
 		});
 	}
 
@@ -61,7 +60,6 @@ const noteful = (function () {
 				store.notes = searchResponse;
 				render();
 			});
-
 		});
 	}
 
@@ -80,10 +78,10 @@ const noteful = (function () {
 
 			api.update(noteObj.id, noteObj, updateResponse => {
 				store.currentNote = updateResponse;
-
+				const note = store.notes.find( note => note.id === noteObj.id);
+				Object.assign(note, noteObj);
 				render();
 			});
-
 		});
 	}
 
