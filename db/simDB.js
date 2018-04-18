@@ -44,7 +44,7 @@ const simDB = {
 			try {
 				id = Number(id);
 				let item = this.data.find(item => item.id === id);
-				callback(null, item);	
+				callback(null, item);
 			} catch (err) {
 				console.log(err);
 				callback(err);
@@ -101,7 +101,6 @@ const simDB = {
 			}
 		}, DELAY);
 	}
-
 };
 
 module.exports = Object.create(simDB);

@@ -1,5 +1,4 @@
 
-
 const express = require('express');
 const data = require('./db/notes');
 const simDB = require('./db/simDB');
@@ -16,21 +15,21 @@ app.use(logger);
 
 app.get('/api/notes', (req, res, next) => {
 	const {searchTerm} = req.query;
-	notes.filter(searchTerm, (err, list) => {
-		if(!err && list) {
-			res.json(list);
+	notes.filter(searchTerm, (err, list = [] ) => { /* type cast like 'int myInt' or 'string myString' in JAVA */
+		if(err !== null) {
+			return next(err);
 		}
-		next(err);
+		res.json(list);
 	});
 });
 
 app.get('/api/notes/:id', (req, res, next) => {
 	const id = req.params.id;
-	notes.find(id, (err, note) => {
-		if(!err && note) {
-			res.json(note);
+	notes.find(id, (err, note = {}) => {  /* type cast like 'int myInt' or 'string myString' in JAVA */
+		if(err !== null) {
+			return next(err);
 		}
-		next(err);
+		res.json(note);
 	});
 });
 
@@ -40,7 +39,7 @@ app.put('/api/notes/:id', (req, res, next) => {
 	/***** Never trust users - validate input *****/
 	const updateObj = {};
 	const updateFields = ['title', 'content'];
-	
+
 	updateFields.forEach(field => {
 		if (field in req.body) {
 			updateObj[field] = req.body[field];
@@ -58,8 +57,6 @@ app.put('/api/notes/:id', (req, res, next) => {
 		}
 	});
 });
-
-
 
 app.use(function (req, res, next) {
 	var err = new Error('Not Found');
