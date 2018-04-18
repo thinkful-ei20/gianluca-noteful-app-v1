@@ -78,4 +78,22 @@ router.post('/notes', (req, res, next) => {
 	});
 });
 
+router.delete('/notes/:id', (req, res, next) => {
+	const id = req.params.id;
+	notes.find(id, (err) => {  /* type cast like 'int myInt' or 'string myString' in JAVA */
+		if(err !== null) {
+			return next(err);
+		}
+		notes.delete(id, (err, length) => {
+			console.log(err, length);
+			if(err !== null) {
+				return next(err);
+			} else if( length !== 1) {
+				return next(err);
+			}
+			res.status(204).json({ message: 'No Content' });
+		});
+	});
+});
+
 module.exports = router;

@@ -93,7 +93,7 @@ const simDB = {
 				if (index === -1) {
 					return callback(null, null);
 				}
-				const len = this.data.splice(index, 1).length;
+				const len = this.data.splice(index, 1).length;			
 				return callback(null, len);
 
 			} catch (err) {
