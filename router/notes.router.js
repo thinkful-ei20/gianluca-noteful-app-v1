@@ -97,8 +97,7 @@ router.delete('/notes/:id', (req, res, next) => {
 	const id = req.params.id;
 	notes.delete(id)
 		.then((len) => {
-			console.log(len);
-			res.status(204)
+			res.status(204).json({message:'No Content'});
 		})
 		.catch( err => {
 			next(err);

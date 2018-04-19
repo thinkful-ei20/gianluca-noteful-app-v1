@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="./scripts/api.js"></script>
+<script>
+
+	// test get all
+	api.search({})
+    .then(response => {
+    	console.log('From GET all',response)
+    });
+
+	// test get all with search term
+	api.search({searchTerm: 'dogs'})
+	.then(response => {
+		console.log('From GET by search',response)
+	});
+
+	// test get by id
+	api.details(1007)
+	.then(response => {
+		console.log('From GET by id',response)
+	});
+
+	// test put by id
+	api.update(1000, {title:'title', content:'content'})
+	.then(response => {
+		console.log('From PUT by id',response)
+	});
+
+	// test post
+	api.create({title:'title', content:'content'})
+	.then(response => {
+		console.log('From POST',response)
+	});
+
+	//test delete
+	api.remove(1006)
+	.then(response => {
+		console.log('From DELETE', response)
+	});
+	
+</script>
+</body>
+</html>
