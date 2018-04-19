@@ -21,7 +21,7 @@ app.use('/api', notesRouter);
 
 // Catch-all 404
 app.use(function (req, res, next) {
-	var err = new Error('Not Found');
+	let err = new Error('Not Found');
 	err.status = 404;
 	next(err);
 });

@@ -11,23 +11,33 @@ const notes = simDB.initialize(data);
 // Get All items
 router.get('/notes', (req, res, next) => {
 	const {searchTerm} = req.query;
-	notes.filter(searchTerm, (err, list = [] ) => {
-		if(err) {
-			return next(err);
-		}
-		res.json(list);
-	});
+	notes.filter(searchTerm)
+		.then( list => {
+			if(list) {
+				res.status(200).json(list);
+			} else {
+				next();
+			}
+		})
+		.catch(err => {
+			next(err);
+		});
 });
 
 // Get a single item
 router.get('/notes/:id', (req, res, next) => {
 	const id = req.params.id;
-	notes.find(id, (err, note = {}) => {
-		if(err) {
-			return next(err);
-		}
-		res.json(note);
-	});
+	notes.find(id)
+		.then(item => {
+			if (item) {
+				res.status(200).json(item);
+			} else {
+				next();
+			}
+		})
+		.catch(err => {
+			next(err);
+		});
 });
 
 // Update an item
@@ -44,16 +54,18 @@ router.put('/notes/:id', (req, res, next) => {
 		}
 	});
 
-	notes.update(id, updateObj, (err, item) => {
-		if (err) {
-			return next(err);
-		}
-		if (item) {
-			res.json(item);
-		} else {
-			next();
-		}
-	});
+	notes.update(id, updateObj)
+		.then(item => {
+			if(item) {
+				console.log(item);
+				res.status(201).json({ message: 'Updated', id: item.id});
+			} else {
+				next();
+			}
+		})
+		.catch( err => {
+			next(err);
+		});
 });
 
 // Post (insert) an item
@@ -68,37 +80,29 @@ router.post('/notes', (req, res, next) => {
 		return next(err);
 	}
 
-	notes.create(newItem, (err, item) => {
-		if (err) {
-			return next(err);
-		}
-		if (item) {
-			res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
-		} else {
-			next();
-		}
-	});
+	notes.create(newItem)
+		.then(item => {
+			if(item) {
+				res.status(201).json(item);
+			} else {
+				next();
+			}
+		})
+		.catch( err => {
+			next(err);
+		});
 });
-
-/**
- *	If we assume 'err' is null, then this statement...
- *		
- *		let err = null;
- * 			if(err) {
- * 				console.log('error');
- * 			}
- * 
- *	...will never execute because null evaluates to 'false'.
- */
 
 router.delete('/notes/:id', (req, res, next) => {
 	const id = req.params.id;
-	notes.delete(id, (err, length) => {
-		if(err) {
-			return next(err);
-		}
-		res.status(204).json({ message: 'No Content' });
-	});
+	notes.delete(id)
+		.then((len) => {
+			console.log(len);
+			res.status(204)
+		})
+		.catch( err => {
+			next(err);
+		});
 });
 
 module.exports = router;
