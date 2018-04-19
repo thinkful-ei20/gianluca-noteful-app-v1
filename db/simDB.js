@@ -95,7 +95,6 @@ const simDB = {
 				}
 				const len = this.data.splice(index, 1).length;			
 				return callback(null, len);
-
 			} catch (err) {
 				callback(err);
 			}

@@ -12,7 +12,7 @@ const notes = simDB.initialize(data);
 router.get('/notes', (req, res, next) => {
 	const {searchTerm} = req.query;
 	notes.filter(searchTerm, (err, list = [] ) => {
-		if(err !== null) {
+		if(err) {
 			return next(err);
 		}
 		res.json(list);
@@ -23,7 +23,7 @@ router.get('/notes', (req, res, next) => {
 router.get('/notes/:id', (req, res, next) => {
 	const id = req.params.id;
 	notes.find(id, (err, note = {}) => {
-		if(err !== null) {
+		if(err) {
 			return next(err);
 		}
 		res.json(note);
@@ -85,7 +85,7 @@ router.post('/notes', (req, res, next) => {
  *		
  *		let err = null;
  * 			if(err) {
- * 				return next(err)
+ * 				console.log('error');
  * 			}
  * 
  *	...will never execute because null evaluates to 'false'.
@@ -93,16 +93,11 @@ router.post('/notes', (req, res, next) => {
 
 router.delete('/notes/:id', (req, res, next) => {
 	const id = req.params.id;
-	notes.find(id, (err) => {
-		if(err !== null) {
+	notes.delete(id, (err, length) => {
+		if(err) {
 			return next(err);
 		}
-		notes.delete(id, (err, length) => {
-			if(err !== null || length !== 1) {
-				return next(err);
-			}
-			res.status(204).json({ message: 'No Content' });
-		});
+		res.status(204).json({ message: 'No Content' });
 	});
 });
 
