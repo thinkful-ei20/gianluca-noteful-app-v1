@@ -1,17 +1,17 @@
 
 const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
 
+const router = express.Router();
+
+// In-Memory Database
 const data = require('../db/notes');
 const simDB = require('../db/simDB');
 const notes = simDB.initialize(data);
 
-
+// Get All items
 router.get('/notes', (req, res, next) => {
 	const {searchTerm} = req.query;
-	notes.filter(searchTerm, (err, list = [] ) => { /* type cast like 'int myInt' or 'string myString' in JAVA */
+	notes.filter(searchTerm, (err, list = [] ) => {
 		if(err !== null) {
 			return next(err);
 		}
@@ -19,9 +19,10 @@ router.get('/notes', (req, res, next) => {
 	});
 });
 
+// Get a single item
 router.get('/notes/:id', (req, res, next) => {
 	const id = req.params.id;
-	notes.find(id, (err, note = {}) => {  /* type cast like 'int myInt' or 'string myString' in JAVA */
+	notes.find(id, (err, note = {}) => {
 		if(err !== null) {
 			return next(err);
 		}
@@ -29,6 +30,7 @@ router.get('/notes/:id', (req, res, next) => {
 	});
 });
 
+// Update an item
 router.put('/notes/:id', (req, res, next) => {
 	const id = req.params.id;
 
@@ -78,17 +80,25 @@ router.post('/notes', (req, res, next) => {
 	});
 });
 
+/**
+ *	If we assume 'err' is null, then this statement...
+ *		
+ *		let err = null;
+ * 			if(err) {
+ * 				return next(err)
+ * 			}
+ * 
+ *	...will never execute because null evaluates to 'false'.
+ */
+
 router.delete('/notes/:id', (req, res, next) => {
 	const id = req.params.id;
-	notes.find(id, (err) => {  /* type cast like 'int myInt' or 'string myString' in JAVA */
+	notes.find(id, (err) => {
 		if(err !== null) {
 			return next(err);
 		}
 		notes.delete(id, (err, length) => {
-			console.log(err, length);
-			if(err !== null) {
-				return next(err);
-			} else if( length !== 1) {
+			if(err !== null || length !== 1) {
 				return next(err);
 			}
 			res.status(204).json({ message: 'No Content' });
