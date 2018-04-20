@@ -57,7 +57,6 @@ router.put('/notes/:id', (req, res, next) => {
 	notes.update(id, updateObj)
 		.then(item => {
 			if(item) {
-				console.log(item);
 				res.status(201).json({ message: 'Updated', id: item.id});
 			} else {
 				next();
